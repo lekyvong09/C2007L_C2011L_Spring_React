@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './App.css';
 
 const intialProducts = [
@@ -8,6 +8,12 @@ const intialProducts = [
 
 function App() {
   const [products , setProducts] = useState(intialProducts);
+
+  useEffect(() => {
+    fetch('http://localhost:8080/api/products')
+      .then(response => response.json())
+      .then(data => console.log(data))
+  }, []);
 
   const addProduct = () => {
     setProducts((prevState) => [...products, 
