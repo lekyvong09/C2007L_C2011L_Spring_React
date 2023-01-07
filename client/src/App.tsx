@@ -1,24 +1,30 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { useState } from 'react';
 import './App.css';
 
+const intialProducts = [
+  {name: 'product 1', price: 11.11},
+  {name: 'product 2', price: 22.22},
+]
+
 function App() {
+  const [products , setProducts] = useState(intialProducts);
+
+  const addProduct = () => {
+    setProducts((prevState) => [...products, 
+      {name: 'product ' + (prevState.length + 1), price: 11.11* (prevState.length + 1)}]);
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div style={{color: 'blue',}}>
+      <h1>My Shop</h1>
+      <button onClick={addProduct}>Add Product</button>
+      <ul>
+        {products.map((product, index) => (
+          <li key={index}>
+            {product.name} - price: {product.price}
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }
