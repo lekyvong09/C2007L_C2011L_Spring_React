@@ -1,4 +1,5 @@
 import { Product } from "../../model/product";
+import ProductList from "./ProductList";
 
 interface Props {
     products: Product[],
@@ -9,13 +10,7 @@ export default function Catalog(props: Props) {
     return (
         <>
             <button onClick={props.onAddProduct}>Add Product</button>
-            <ul>
-                {props.products.map((product: any, index: any) => (
-                    <li key={index}>
-                        {product.name} - price: {product.unitPrice}
-                    </li>
-                ))}
-            </ul>
+            <ProductList products={props.products}/>
         </>
     );
 }
