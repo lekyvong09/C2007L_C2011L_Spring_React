@@ -2,6 +2,7 @@ import { Divider, Grid, Table, TableBody, TableCell, TableContainer, TableRow, T
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import LoadingComponent from "../../layout/LoadingComponent";
 import { Product } from "../../model/product";
 
 export default function ProductDetail() {
@@ -19,7 +20,7 @@ export default function ProductDetail() {
     }, [params.productId]);
 
     if (loading)
-        return <h3>Loading</h3>
+        return <LoadingComponent />
 
     if (!product)
         return <h3>Product not found</h3>
@@ -27,7 +28,7 @@ export default function ProductDetail() {
     return (
         <Grid container spacing={6}>
             <Grid item xs={4}>
-                <img src={`${process.env.REACT_APP_BASE_URL}/file/image/${product?.imageUrl}`}
+                <img src={`${process.env.REACT_APP_BASE_URL}file/image/${product?.imageUrl}`}
                     alt={`${product?.name}`} style={{width: '100%'}}/>
             </Grid>
             <Grid item xs={8}>
