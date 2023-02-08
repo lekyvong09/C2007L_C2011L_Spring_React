@@ -47,6 +47,11 @@ public class Product {
 //    @JsonIgnore
     private ProductCategory category;
 
+    @OneToOne
+    @PrimaryKeyJoinColumn
+    @JsonIgnore
+    private BasketItem basketItem;
+
     public Product() {
     }
 
