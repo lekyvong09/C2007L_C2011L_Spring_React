@@ -30,7 +30,7 @@ export default function AboutPage() {
                 >Test 404 Error</Button>
                 <Button
                     variant="contained"
-                    onClick={() => axios.get('buggy/500').then(response => console.log(response.data)).catch(error => console.log(error))}
+                    onClick={() => axios.get('products/fewfew').then(response => console.log(response.data)).catch(error => console.log(error))}
                 >Test 500 Error</Button>
             </ButtonGroup>
 
