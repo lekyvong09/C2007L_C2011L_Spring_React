@@ -10,7 +10,7 @@ export default function AxiosInterceptor(props: any) {
     useEffect(() => {
         // async function interceptorToCheckError() {
             const interceptor = axios.interceptors.response.use(async response => {
-                await sleep(1000);
+                // await sleep(1000);
                 return response;
               }, (error: AxiosError<any>) => {
                 console.log('interceptor run to get error msg');

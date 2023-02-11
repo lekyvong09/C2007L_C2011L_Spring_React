@@ -8,7 +8,7 @@ import reportWebVitals from './reportWebVitals';
 import 'react-toastify/dist/ReactToastify.css';
 
 axios.defaults.baseURL = process.env.REACT_APP_BASE_URL;
-
+axios.defaults.withCredentials = true;
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
