@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.persistence.NoResultException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -50,7 +51,9 @@ public class BasketController {
                 item.getProduct().getBrand(),
                 item.getProduct().getCategory().getCategoryName(),
                 item.getQuantity()
-        )).collect(Collectors.toList());
+                ))
+                .sorted(Comparator.comparingLong(i -> i.getProductId()))
+                .collect(Collectors.toList());
 
         BasketDto basketDto = new BasketDto();
         basketDto.setId(basketList.get(0).getId());
@@ -97,7 +100,9 @@ public class BasketController {
                 item.getProduct().getBrand(),
                 item.getProduct().getCategory().getCategoryName(),
                 item.getQuantity()
-        )).collect(Collectors.toList());
+                ))
+                .sorted(Comparator.comparingLong(i -> i.getProductId()))
+                .collect(Collectors.toList());
 
         BasketDto basketDto = new BasketDto();
         basketDto.setId(returnBasket.getId());
@@ -143,7 +148,9 @@ public class BasketController {
                 item.getProduct().getBrand(),
                 item.getProduct().getCategory().getCategoryName(),
                 item.getQuantity()
-        )).collect(Collectors.toList());
+                ))
+                .sorted(Comparator.comparingLong(i -> i.getProductId()))
+                .collect(Collectors.toList());
 
         BasketDto basketDto = new BasketDto();
         basketDto.setId(returnBasket.getId());
