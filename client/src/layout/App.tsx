@@ -13,6 +13,7 @@ import ProductDetail from '../features/catalog/ProductDetail';
 import {ToastContainer} from 'react-toastify';
 import AxiosInterceptor from '../interceptor/AxiosInterceptor';
 import NotFound from '../features/error/NotFound';
+import BasketPage from '../features/basket/BasketPage';
 
 function App() {
   const [darkMode, setDarkMode] = useState(false);
@@ -38,7 +39,8 @@ function App() {
               <Route path='contact' element={<ContactPage />} />
               <Route path='upload' element={<Uploader />} />
               <Route path='not-found' element={<NotFound />} />
-              
+              <Route path='basket' element={<BasketPage/>} />
+              <Route path='*' element={<NotFound />} />
             </Routes>
           </Container>
         </AxiosInterceptor>
