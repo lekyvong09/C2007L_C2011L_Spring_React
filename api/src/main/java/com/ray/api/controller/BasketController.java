@@ -124,6 +124,7 @@ public class BasketController {
             throw new NoResultException("The basket doesn't have this item");
 
         int newQuantity = existingItem.getQuantity() - quantity;
+        existingItem.setQuantity(newQuantity);
 
         if (newQuantity <= 0) {
             basket.getBasketItems().remove(existingItem);
