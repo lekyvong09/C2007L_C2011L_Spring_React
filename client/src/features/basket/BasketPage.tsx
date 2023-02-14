@@ -1,41 +1,11 @@
 import { Delete } from "@mui/icons-material";
 import { IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
-import axios, { AxiosResponse } from "axios";
-import { useEffect, useState } from "react";
-import LoadingComponent from "../../layout/LoadingComponent";
-import { Basket } from "../../model/basket";
+import { useContext } from "react";
+import { StoreContext } from "../../context/StoreContext";
 
-function createData(
-    name: string,
-    calories: number,
-    fat: number,
-    carbs: number,
-    protein: number,
-  ) {
-    return { name, calories, fat, carbs, protein };
-  }
-  
-  const rows = [
-    createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-    createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-    createData('Eclair', 262, 16.0, 24, 6.0),
-    createData('Cupcake', 305, 3.7, 67, 4.3),
-    createData('Gingerbread', 356, 16.0, 49, 3.9),
-  ];
 
 export default function BasketPage() {
-    const [basket, setBasket] = useState<Basket | null>(null);
-    const [loading, setLoading] = useState(true);
-
-    useEffect(() => {
-        axios.get('baskets')
-            .then((response: AxiosResponse) => setBasket(response.data))
-            .catch(err => console.log(err))
-            .finally(() => setLoading(false));
-    }, []);
-
-    if (loading)
-        return <LoadingComponent />
+    const {basket} = useContext(StoreContext);
 
     if (!basket)
         return <Typography variant="h3">Basket is empty</Typography>
@@ -61,9 +31,9 @@ export default function BasketPage() {
                         <TableCell component="th" scope="row">
                             {row.name}
                         </TableCell>
-                        <TableCell align="right">{row.unitPrice}</TableCell>
+                        <TableCell align="right">${row.unitPrice}</TableCell>
                         <TableCell align="right">{row.quantity}</TableCell>
-                        <TableCell align="right">{row.unitPrice * row.quantity}</TableCell>
+                        <TableCell align="right">${(row.unitPrice * row.quantity).toFixed(2)}</TableCell>
                         <TableCell align="right">
                             <IconButton color="error">
                                 <Delete />

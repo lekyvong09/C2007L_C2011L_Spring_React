@@ -23,12 +23,12 @@ public class ExceptionHandling {
 
     @ExceptionHandler(NoResultException.class)
     public ResponseEntity<HttpResponse> noResultException(NoResultException exception) {
-        return createHttpResponse(HttpStatus.NOT_FOUND, exception.getMessage());
+        return createHttpResponse(HttpStatus.BAD_REQUEST, exception.getMessage());
     }
 
     @ExceptionHandler(NoSuchElementException.class)
     public ResponseEntity<HttpResponse> noSuchElementException(NoResultException exception) {
-        return createHttpResponse(HttpStatus.NOT_FOUND, exception.getMessage());
+        return createHttpResponse(HttpStatus.BAD_REQUEST, exception.getMessage());
     }
 
 

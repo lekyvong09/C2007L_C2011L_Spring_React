@@ -2,8 +2,9 @@ import { LoadingButton } from "@mui/lab";
 import { Avatar, Button, Card, CardActions, CardContent, CardMedia, Typography, CardHeader } from "@mui/material";
 import { red } from "@mui/material/colors";
 import axios, { AxiosResponse } from "axios";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Link } from "react-router-dom";
+import { StoreContext } from "../../context/StoreContext";
 import { Product } from "../../model/product";
 
 interface Props {
@@ -11,12 +12,13 @@ interface Props {
 }
 
 export default function ProductCard(props: Props) {
+    const {setBasket} = useContext(StoreContext);
     const [loading, setLoading] = useState(false);
 
     const handleAddItem = (productId: number) => {
         setLoading(true);
         axios.post(`baskets?productId=${productId}&quantity=1`, {})
-            .then((response: AxiosResponse) => {console.log(response);})
+            .then((response: AxiosResponse) => setBasket(response.data))
             .catch(err => console.log(err))
             .finally(() => setLoading(false));
     };
