@@ -8,22 +8,31 @@ import { StoreContext } from "../../context/StoreContext";
 
 export default function BasketPage() {
     const {basket, setBasket, removeItem} = useContext(StoreContext);
-    const [loading, setLoading] = useState(false);
+    const [status, setStatus] = useState({
+        loading: false,
+        name: ''
+    });
 
-    const handleAddItem = (productId: number) => {
-        setLoading(true);
+    const handleAddItem = (productId: number, name: string) => {
+        setStatus({
+            loading: true,
+            name: name
+        });
         axios.post(`baskets?productId=${productId}&quantity=1`, {})
             .then((response: AxiosResponse) => setBasket(response.data))
             .catch(err => console.log(err))
-            .finally(() => setLoading(false));
+            .finally(() => setStatus({loading: false, name}));
     }
 
-    const handleRemoveItem = (productId: number, quantity: number) => {
-        setLoading(true);
+    const handleRemoveItem = (productId: number, quantity: number, name: string) => {
+        setStatus({
+            loading: true,
+            name: name
+        });
         axios.delete(`baskets?productId=${productId}&quantity=${quantity}`)
             .then(() => removeItem(productId, quantity))
             .catch(err => console.log(err))
-            .finally(() => setLoading(false));
+            .finally(() => setStatus({loading: false, name}));
     }
 
     if (!basket)
@@ -55,16 +64,18 @@ export default function BasketPage() {
                         <TableCell align="center">
                             <LoadingButton 
                                 color="secondary"
-                                loading={loading}
-                                onClick={() => handleAddItem(row.productId)}
+                                loading={status.loading && status.name === 'add' + row.productId}
+                                onClick={() => handleAddItem(row.productId, 'add'+row.productId)}
                             >
                                 <AddCircle />
                             </LoadingButton>
                                 {row.quantity}
                             <LoadingButton 
                                 color="error"
-                                loading={loading}
-                                onClick={() => handleRemoveItem(row.productId, 1)}
+                                loading={status.loading && status.name ==='remove'+row.productId}
+                                onClick={
+                                () => handleRemoveItem(row.productId,1,'remove'+row.productId)
+                            }
                             >
                                 <RemoveCircle />
                             </LoadingButton>
@@ -74,7 +85,10 @@ export default function BasketPage() {
                         <TableCell align="right">
                             <LoadingButton 
                                 color="error"
-                                onClick={() => handleRemoveItem(row.productId, row.quantity)}
+                                loading={status.loading && status.name ==='delete'+row.productId}
+                                onClick={
+                                () => handleRemoveItem(row.productId,row.quantity,'delete'+row.productId)
+                            }
                             >
                                 <Delete />
                             </LoadingButton>
