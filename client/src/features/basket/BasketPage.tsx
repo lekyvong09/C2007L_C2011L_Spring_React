@@ -1,9 +1,10 @@
 import { AddCircle, Delete, RemoveCircle } from "@mui/icons-material";
 import { LoadingButton } from "@mui/lab";
-import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
+import { Grid, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
 import axios, { AxiosResponse } from "axios";
 import { useContext, useState } from "react";
 import { StoreContext } from "../../context/StoreContext";
+import BasketSummary from "./BasketSummary";
 
 
 export default function BasketPage() {
@@ -39,6 +40,7 @@ export default function BasketPage() {
         return <Typography variant="h3">Basket is empty</Typography>
 
     return (
+    <>
         <TableContainer component={Paper} elevation={3}>
             <Table sx={{ minWidth: 650 }}>
                 <TableHead>
@@ -98,5 +100,13 @@ export default function BasketPage() {
                 </TableBody>
             </Table>
         </TableContainer>
+
+        <Grid container>
+            <Grid item xs={6} />
+            <Grid item xs={6} >
+                <BasketSummary />
+            </Grid>
+        </Grid>
+    </>
     );
 }
