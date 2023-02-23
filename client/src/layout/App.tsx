@@ -18,6 +18,7 @@ import { getCookie } from '../util/util';
 import axios, { AxiosResponse } from 'axios';
 import { StoreContext } from '../context/StoreContext';
 import LoadingComponent from './LoadingComponent';
+import CheckoutPage from '../features/checkout/CheckoutPage';
 
 function App() {
   const {setBasket} = useContext(StoreContext);
@@ -65,6 +66,7 @@ function App() {
               <Route path='upload' element={<Uploader />} />
               <Route path='not-found' element={<NotFound />} />
               <Route path='basket' element={<BasketPage/>} />
+              <Route path='checkout' element={<CheckoutPage />} />
               <Route path='*' element={<NotFound />} />
             </Routes>
           </Container>
