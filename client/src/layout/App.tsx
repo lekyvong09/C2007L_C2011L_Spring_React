@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './App.css';
 import Catalog from '../features/catalog/Catalog';
 import { createTheme, CssBaseline, ThemeProvider } from '@mui/material';
@@ -16,12 +16,13 @@ import NotFound from '../features/error/NotFound';
 import BasketPage from '../features/basket/BasketPage';
 import { getCookie } from '../util/util';
 import axios, { AxiosResponse } from 'axios';
-import { StoreContext } from '../context/StoreContext';
 import LoadingComponent from './LoadingComponent';
 import CheckoutPage from '../features/checkout/CheckoutPage';
+import { store } from '../store';
+import { setBasketReducer } from '../features/basket/basketSlice';
 
 function App() {
-  const {setBasket} = useContext(StoreContext);
+  // const {setBasket} = useContext(StoreContext);
   const [loading, setLoading] = useState<boolean>();
 
   const [darkMode, setDarkMode] = useState(false);
@@ -37,13 +38,13 @@ function App() {
       setLoading(true);
       axios.get('baskets')
         .then((response: AxiosResponse) => {
-          setBasket(response.data);
+          store.dispatch(setBasketReducer(response.data))
           console.log(response.data);
         })
         .catch(err => console.log(err))
         .finally(() => setLoading(false));
     }
-  }, [setBasket]);
+  }, []);
 
   if (loading) {
     return <LoadingComponent />
