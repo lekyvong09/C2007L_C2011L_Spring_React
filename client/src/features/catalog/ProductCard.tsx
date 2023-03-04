@@ -1,29 +1,18 @@
 import { LoadingButton } from "@mui/lab";
 import { Avatar, Button, Card, CardActions, CardContent, CardMedia, Typography, CardHeader } from "@mui/material";
 import { red } from "@mui/material/colors";
-import axios, { AxiosResponse } from "axios";
-import { useState } from "react";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { Product } from "../../model/product";
 import { store } from "../../store";
-import { setBasketReducer } from "../basket/basketSlice";
+import { addBasketItemThunk } from "../basket/basketSlice";
 
 interface Props {
     product: Product;
 }
 
 export default function ProductCard(props: Props) {
-    // const {setBasket} = useContext(StoreContext);
-    const [loading, setLoading] = useState(false);
-
-    const handleAddItem = (productId: number) => {
-        setLoading(true);
-        axios.post(`baskets?productId=${productId}&quantity=1`, {})
-            // .then((response: AxiosResponse) => setBasket(response.data))
-            .then((response: AxiosResponse) => store.dispatch(setBasketReducer(response.data)))
-            .catch(err => console.log(err))
-            .finally(() => setLoading(false));
-    };
+    const {status} = useSelector((state: any) => state.basket);
 
     return (
         <>
@@ -53,9 +42,9 @@ export default function ProductCard(props: Props) {
                 </CardContent>
                 <CardActions>
                     <LoadingButton 
-                        loading={loading}
+                        loading={status === 'pendingAddItem' + props.product.id}
                         size="small"
-                        onClick={() => handleAddItem(props.product.id)}
+                        onClick={() => store.dispatch(addBasketItemThunk({productId: props.product.id}))}
                     >Add to cart</LoadingButton>
                     <Button 
                         size="small"

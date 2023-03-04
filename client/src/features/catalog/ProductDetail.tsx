@@ -1,6 +1,6 @@
 import { LoadingButton } from "@mui/lab";
 import { Divider, Grid, Table, TableBody, TableCell, TableContainer, TableRow, TextField, Typography } from "@mui/material";
-import axios, { AxiosResponse } from "axios";
+import axios from "axios";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
@@ -8,18 +8,18 @@ import LoadingComponent from "../../layout/LoadingComponent";
 import { BasketItem } from "../../model/basket";
 import { Product } from "../../model/product";
 import { store } from "../../store";
-import { removeItemReducer, setBasketReducer } from "../basket/basketSlice";
+import { addBasketItemThunk, removeBasketItemThunk } from "../basket/basketSlice";
 
 export default function ProductDetail() {
     let params = useParams();
-    const {basket} = useSelector((state: any) => state.basket);
+    const {basket, status} = useSelector((state: any) => state.basket);
     const [product, setProduct] = useState<Product | null>(null);
     const [loading, setLoading] = useState(true);
 
     const basketItem = basket?.basketItems.find((i: BasketItem) => i.productId === product?.id);
     const [quantity, setQuantity] = useState(0);
 
-    const [submitting, setSubmitting] = useState(false);
+    // const [submitting, setSubmitting] = useState(false);
 
     useEffect(() => {
         axios.get(`products/${params.productId}`)
@@ -42,19 +42,12 @@ export default function ProductDetail() {
     }
 
     const handleUpdateCart = () => {
-        setSubmitting(true);
         if (!basketItem || quantity > basketItem?.quantity) {
             const updatedQuantity = basketItem ? quantity - basketItem.quantity : quantity;
-            axios.post(`baskets?productId=${product?.id}&quantity=${updatedQuantity}`, {})
-                .then((response: AxiosResponse) => store.dispatch(setBasketReducer(response.data)))
-                .catch(err => console.log)
-                .finally(() => setSubmitting(false));
+            store.dispatch(addBasketItemThunk({productId: product!.id, quantity: updatedQuantity}));
         } else {
             const updatedQuantity = basketItem.quantity - quantity;
-            axios.delete(`baskets?productId=${product?.id}&quantity=${updatedQuantity}`)
-                .then(() => store.dispatch(removeItemReducer({productId: product?.id!, quantity: updatedQuantity})))
-                .catch(err => console.log)
-                .finally(() => setSubmitting(false));
+            store.dispatch(removeBasketItemThunk({productId: product!.id, quantity: updatedQuantity}))
         }
     }
 
@@ -117,7 +110,7 @@ export default function ProductDetail() {
                     <Grid item xs={6}>
                         <LoadingButton
                             disabled={basketItem?.quantity === quantity || (!basketItem && quantity === 0)}
-                            loading={submitting}
+                            loading={status.includes('pending')}
                             onClick={handleUpdateCart}
                             sx={{height: '55px'}}
                             color="primary"
