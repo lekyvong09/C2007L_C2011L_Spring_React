@@ -1,39 +1,29 @@
 import { LoadingButton } from "@mui/lab";
 import { Divider, Grid, Table, TableBody, TableCell, TableContainer, TableRow, TextField, Typography } from "@mui/material";
-import axios from "axios";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import LoadingComponent from "../../layout/LoadingComponent";
 import { BasketItem } from "../../model/basket";
-import { Product } from "../../model/product";
 import { store } from "../../store";
 import { addBasketItemThunk, removeBasketItemThunk } from "../basket/basketSlice";
+import { fetchProductByIdThunk, productsAdapter } from "./catalogSlice";
 
 export default function ProductDetail() {
     let params = useParams();
     const {basket, status} = useSelector((state: any) => state.basket);
-    const [product, setProduct] = useState<Product | null>(null);
-    const [loading, setLoading] = useState(true);
+    const productStatus = useSelector((state: any) => state.catalog.status);
+    const product = productsAdapter.getSelectors().selectById(
+        store.getState().catalog, +params.productId!);
 
     const basketItem = basket?.basketItems.find((i: BasketItem) => i.productId === product?.id);
     const [quantity, setQuantity] = useState(0);
 
-    // const [submitting, setSubmitting] = useState(false);
-
     useEffect(() => {
-        axios.get(`products/${params.productId}`)
-            .then(response => {
-                console.log(response);
-                setProduct(response.data);
-
-                if (basketItem) {
-                    setQuantity(basketItem.quantity);
-                }
-
-            }).catch(error => console.log(error))
-            .finally(() => setLoading(false));
-    }, [basketItem, params.productId]);
+        if (!product) {
+            store.dispatch(fetchProductByIdThunk(+params.productId!));
+        }
+    }, [params.productId, product]);
 
     const handleInputChange = (event: any) => {
         if (event.target.value >= 0) {
@@ -51,7 +41,7 @@ export default function ProductDetail() {
         }
     }
 
-    if (loading)
+    if (productStatus.includes('pending'))
         return <LoadingComponent />
 
     if (!product)
