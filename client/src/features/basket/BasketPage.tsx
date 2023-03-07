@@ -50,8 +50,8 @@ export default function BasketPage() {
                                 {row.quantity}
                             <LoadingButton 
                                 color="error"
-                                loading={status === 'pendingRemoveItem' + row.productId}
-                                onClick={() => store.dispatch(removeBasketItemThunk({productId: row.productId, quantity: 1}))
+                                loading={status === 'pendingRemoveItem' + row.productId + 'rem'}
+                                onClick={() => store.dispatch(removeBasketItemThunk({productId: row.productId, quantity: 1, name: 'rem'}))
                             }
                             >
                                 <RemoveCircle />
@@ -62,8 +62,8 @@ export default function BasketPage() {
                         <TableCell align="right">
                             <LoadingButton 
                                 color="error"
-                                loading={status === 'pendingRemoveItem' + row.productId}
-                                onClick={() => store.dispatch(removeBasketItemThunk({productId: row.productId, quantity: row.quantity}))
+                                loading={status === 'pendingRemoveItem' + row.productId + 'del'}
+                                onClick={() => store.dispatch(removeBasketItemThunk({productId: row.productId, quantity: row.quantity, name: 'del'}))
                             }
                             >
                                 <Delete />
