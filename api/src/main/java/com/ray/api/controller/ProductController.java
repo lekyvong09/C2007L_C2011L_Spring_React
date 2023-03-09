@@ -1,9 +1,11 @@
 package com.ray.api.controller;
 
 import com.ray.api.dao.ProductRepository;
+import com.ray.api.dao.ProductSpecification;
 import com.ray.api.dto.ProductReturnDto;
 import com.ray.api.entity.Product;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -43,5 +45,21 @@ public class ProductController {
     public ResponseEntity<ProductReturnDto> getProductById(@PathVariable("productId") Long productId) {
         Product product = productRepository.findById(productId).get();
         return new ResponseEntity<>(new ProductReturnDto(product), HttpStatus.OK);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<ProductReturnDto>> searchProduct(
+            @RequestParam(value="name", defaultValue = "all") String name,
+            @RequestParam(value="brand", defaultValue = "all") String brand,
+            @RequestParam(value="category", defaultValue = "all") String category) {
+        List<Product> products = productRepository.findAll(
+                Specification.where(ProductSpecification.searchByName(name)
+                        .and(ProductSpecification.filterByBrand(brand))
+                        .and(ProductSpecification.filterByCategoryId(category)))
+        );
+
+        List<ProductReturnDto> returnDtoList = products.stream()
+                .map(product -> new ProductReturnDto(product)).collect(Collectors.toList());
+        return new ResponseEntity<>(returnDtoList, HttpStatus.OK);
     }
 }
